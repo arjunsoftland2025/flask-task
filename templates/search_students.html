@@ -1,0 +1,68 @@
+{% extends 'home-layout.html'%} {% block content %}
+<div class="container">
+  <h1 class="text-center text-head">Display</h1>
+  <div class="area">
+    <div class="element">
+      <form class="input-group" onsubmit="searchStudent(event)">
+        <input
+          id="search-input"
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          Search Student
+        </button>
+      </form>
+      <div class="container bg-white" style="font-size: 20px;" id="result"></div>
+    </div>
+  </div>
+  <script>
+    async function searchStudent(event) {
+      event.preventDefault();
+
+      let searchInput = document.getElementById("search-input").value.trim();
+      let resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "";
+
+      if (!searchInput) {
+        alert("Please enter a student name.");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `/find_student?name=${encodeURIComponent(searchInput)}`
+        );
+        const data = await response.json();
+
+        if (response.status !== 200) {
+          resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+          return;
+        }
+
+        let subjectsHTML = `<h3>Subjects & Marks:</h3><ul>`;
+        for (let [subject, marks] of Object.entries(data.subjects)) {
+          subjectsHTML += `
+                            <li><strong>${subject}</strong>: 
+                                Sem 1 - ${marks.sem1}, 
+                                Sem 2 - ${marks.sem2}
+                            </li>`;
+        }
+        subjectsHTML += `</ul>`;
+
+        resultDiv.innerHTML = `
+                        <p><strong>ID:</strong> ${data.id}</p>
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Class:</strong> ${data.class}</p>
+                        ${subjectsHTML}
+                    `;
+      } catch (error) {
+        console.error("Error fetching student data:", error);
+        resultDiv.innerHTML = `<p style="color: red;">Error retrieving student details.</p>`;
+      }
+    }
+  </script>
+</div>
+{% endblock %}

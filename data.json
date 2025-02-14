@@ -52,6 +52,82 @@
                     "sem2": 67
                 }
             }
+        },
+        {
+            "id": "4",
+            "name": "Joel",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 21,
+                    "sem2": 21
+                },
+                "Science": {
+                    "sem1": 22,
+                    "sem2": 21
+                },
+                "English": {
+                    "sem1": 21,
+                    "sem2": 21
+                }
+            }
+        },
+        {
+            "id": "5",
+            "name": "Joel",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 11,
+                    "sem2": 11
+                },
+                "Science": {
+                    "sem1": 11,
+                    "sem2": 11
+                },
+                "English": {
+                    "sem1": 11,
+                    "sem2": 111
+                }
+            }
+        },
+        {
+            "id": "6",
+            "name": "Joeluio",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 1,
+                    "sem2": 1
+                },
+                "Science": {
+                    "sem1": 1,
+                    "sem2": 1
+                },
+                "English": {
+                    "sem1": 1,
+                    "sem2": 1
+                }
+            }
+        },
+        {
+            "id": "7",
+            "name": "Ajith",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 56,
+                    "sem2": 34
+                },
+                "Science": {
+                    "sem1": 45,
+                    "sem2": 66
+                },
+                "English": {
+                    "sem1": 78,
+                    "sem2": 98
+                }
+            }
         }
     ],
     "classes": [

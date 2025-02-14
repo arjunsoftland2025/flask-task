@@ -1,30 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
-    <title>School</title>
-</head>
-<body>
-    <div class="container">
-        <h1 class="text-center text-head" style="color: white;">Welcome</h1>
-        <h2 class="text-center" style="color: white;">Options</h2>
-        <div class="container-center">
-            <div class="element">
-                <ul class="container text-mid">
-                    <li>
-                        <a class="btn" href="{{ url_for('list_of_all_students') }}">Display</a>
-                    </li>
-                    <li>
-                        <a class="btn" href="{{ url_for('add_students_page') }}">Add Student</a>
-                    </li>
-                    <li>
-                        <a class="btn" href="">Average</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+{% extends 'home-layout.html'%} {% block content %}
+<h1 class="display-4 text-center text-white mb-3">Welcome</h1>
+<div class="container bg-white rounded-1 shadow-lg">
+  <div class="container p-3 mb-4">
+    <h2 class="display-6 text-center p-3">Student List</h2>
+    {% if students %}
+    <table class="table table-bordered">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Class</th>
+        <th>Subject</th>
+        <th>Sem 1</th>
+        <th>Sem 2</th>
+      </tr>
+      {% for student in students %} {% for subject, marks in
+      student.subjects.items() %}
+      <tr>
+        {% if loop.first %}
+        <td rowspan="{{ student.subjects|length }}" class="data">
+          {{ student.id }}
+        </td>
+        <td rowspan="{{ student.subjects|length }}" class="data">
+          {{ student.name }}
+        </td>
+        <td rowspan="{{ student.subjects|length }}" class="data">
+          {{ student.class }}
+        </td>
+        {% endif %}
+        <td class="data">{{ subject }}</td>
+        <td class="data">{{ marks.sem1 }}</td>
+        <td class="data">{{ marks.sem2 }}</td>
+      </tr>
+      {% endfor %} {% endfor %}
+    </table>
+    {% else %}
+    <p>No students found.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

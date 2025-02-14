@@ -1,122 +1,164 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
-    <title>Add Student</title>
+{% extends 'home-layout.html'%} {% block content %}
+    <div class="container col-6">
+        <h2 class="text-center">Add Student</h2>
 
-</head>
-<body class="container mt-5">
-
-    <h2 class="text-center">Add Student</h2>
-
-    <form id="studentForm">
-        <div class="mb-3">
-            <label for="name" class="form-label">Student Name</label>
-            <input type="text" class="form-control" id="name" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="classSelect" class="form-label">Select Class</label>
-            <select class="form-control" id="classSelect" required>
-                <option value="">Choose a class</option>
-            </select>
-        </div>
-
-        <div id="subjectsContainer" class="mb-3"></div>
-
-        <button type="submit" class="btn btn-primary">Add Student</button>
-    </form>
-
-    <div id="responseMessage" class="mt-3"></div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            fetchClasses();
-        });
-
-        async function fetchClasses() {
-            try {
-                let response = await fetch("/get_classes");
-                let data = await response.json();
-
-                let classSelect = document.getElementById("classSelect");
-                data.classes.forEach(cls => {
-                    let option = document.createElement("option");
-                    option.value = cls.class_name;
-                    option.textContent = cls.class_name;
-                    classSelect.appendChild(option);
-                });
-
-                classSelect.addEventListener("change", function () {
-                    fetchSubjects(this.value);
-                });
-            } catch (error) {
-                console.error("Error fetching classes:", error);
-            }
-        }
-
-        async function fetchSubjects(className) {
-            if (!className) return;
-
-            try {
-                let response = await fetch(`/get_subjects/${className}`);
-                let data = await response.json();
-                let subjectsContainer = document.getElementById("subjectsContainer");
-                subjectsContainer.innerHTML = "<h5>Subjects & Marks:</h5>";
-
-                data.subjects.forEach(subject => {
-                    let div = document.createElement("div");
-                    div.classList.add("mb-2");
-                    div.innerHTML = `
-                        <label>${subject} (Sem 1 & Sem 2)</label>
-                        <input type="number" class="form-control mb-1" name="${subject}_sem1" placeholder="Sem 1 Marks">
-                        <input type="number" class="form-control" name="${subject}_sem2" placeholder="Sem 2 Marks">
-                    `;
-                    subjectsContainer.appendChild(div);
-                });
-
-            } catch (error) {
-                console.error("Error fetching subjects:", error);
-            }
-        }
-
-        document.getElementById("studentForm").addEventListener("submit", async function (event) {
-            event.preventDefault();
-
-            let studentName = document.getElementById("name").value;
-            let studentClass = document.getElementById("classSelect").value;
-            let subjectInputs = document.querySelectorAll("#subjectsContainer input");
-            
-            let subjects = {};
-            subjectInputs.forEach(input => {
-                let [subject, sem] = input.name.split("_");
-                if (!subjects[subject]) subjects[subject] = {};
-                subjects[subject][sem] = parseInt(input.value) || 0;
+        <div id="responseMessage" class="mt-3"></div>
+        <div id="errorMessage" class="mt-3"></div>
+        
+        <form id="studentForm">
+            <div class="mb-3">
+                <label for="id" class="form-label">Student ID</label>
+                <input type="text" class="form-control" id="id" required>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Student Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+    
+            <div class="mb-3">
+                <label for="classSelect" class="form-label">Select Class</label>
+                <select class="form-control" id="classSelect" required>
+                    <option value="">Choose a class</option>
+                </select>
+            </div>
+    
+            <div id="subjectsContainer" class="mb-3"></div>
+    
+            <button type="submit" class="btn btn-primary">Add Student</button>
+        </form>
+    
+        <div id="responseMessage" class="mt-3"></div>
+    
+        <div id="errorMessage" class="mt-3"></div>
+    
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                fetchClasses();
             });
-
-            let studentData = {
-                name: studentName,
-                class: studentClass,
-                subjects: subjects
-            };
-
-            try {
-                let response = await fetch("/add_student", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(studentData)
-                });
-
-                let result = await response.json();
-                document.getElementById("responseMessage").innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-                document.getElementById("studentForm").reset();
-                document.getElementById("subjectsContainer").innerHTML = "";
-            } catch (error) {
-                console.error("Error adding student:", error);
+            
+            async function fetchClasses() {
+                try {
+                    let response = await fetch("/get_classes");
+                    let data = await response.json();
+            
+                    let classSelect = document.getElementById("classSelect");
+                    data.classes.forEach(cls => {
+                        let option = document.createElement("option");
+                        option.value = cls.class_name;
+                        option.textContent = cls.class_name;
+                        classSelect.appendChild(option);
+                    });
+            
+                    classSelect.addEventListener("change", function () {
+                        fetchSubjects(this.value);
+                    });
+                } catch (error) {
+                    console.error("Error fetching classes:", error);
+                }
             }
-        });
-    </script>
-</body>
-</html>
+            
+            async function fetchSubjects(className) {
+                if (!className) return;
+            
+                try {
+                    let response = await fetch(`/get_subjects/${className}`);
+                    let data = await response.json();
+                    let subjectsContainer = document.getElementById("subjectsContainer");
+                    subjectsContainer.innerHTML = "<h5>Subjects & Marks:</h5>";
+            
+                    data.subjects.forEach(subject => {
+                        let div = document.createElement("div");
+                        div.classList.add("mb-2");
+                        div.innerHTML = `
+                            <label>${subject} (Sem 1 & Sem 2)</label>
+                            <input type="number" class="form-control mb-1 mark-input" name="${subject}_sem1" placeholder="Sem 1 Marks" min="0" max="100" required>
+                            <input type="number" class="form-control mark-input" name="${subject}_sem2" placeholder="Sem 2 Marks" min="0" max="100" required>
+                        `;
+                        subjectsContainer.appendChild(div);
+                    });
+            
+                } catch (error) {
+                    console.error("Error fetching subjects:", error);
+                }
+            }
+            
+            document.getElementById("studentForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+            
+                let studentId = document.getElementById("id").value.trim();
+                let studentName = document.getElementById("name").value.trim();
+                let studentClass = document.getElementById("classSelect").value;
+                let subjectInputs = document.querySelectorAll("#subjectsContainer input");
+                let errorMessage = document.getElementById("errorMessage");
+                let responseMessage = document.getElementById("responseMessage");
+                
+                errorMessage.innerHTML = ""; // Clear old errors
+                responseMessage.innerHTML = ""; // Clear old success messages
+            
+                // Validation
+                let errors = [];
+                if (!studentId) {
+                    errors.push("Student ID is required.");
+                } else if (isNaN(studentId)) {
+                    errors.push("Student ID must be a number.");
+                }
+            
+                if (!studentName) {
+                    errors.push("Student Name is required.");
+                }
+            
+                if (!studentClass) {
+                    errors.push("Please select a class.");
+                }
+            
+                let subjects = {};
+                subjectInputs.forEach(input => {
+                    let [subject, sem] = input.name.split("_");
+                    let value = parseInt(input.value) || 0;
+            
+                    if (value < 0 || value > 100) {
+                        errors.push(`${subject} ${sem} marks must be between 0 and 100.`);
+                    }
+            
+                    if (!subjects[subject]) subjects[subject] = {};
+                    subjects[subject][sem] = value;
+                });
+            
+                // If there are validation errors, display them and stop form submission
+                if (errors.length > 0) {
+                    errorMessage.innerHTML = `<div class="alert alert-danger">${errors.join("<br>")}</div>`;
+                    return;
+                }
+            
+                let studentData = {
+                    id: studentId,
+                    name: studentName,
+                    class: studentClass,
+                    subjects: subjects
+                };
+            
+                try {
+                    let response = await fetch("/add_student", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(studentData)
+                    });
+            
+                    let result = await response.json();
+            
+                    if (!response.ok) {
+                        errorMessage.innerHTML = `<div class="alert alert-danger">${result.error || 'Something went wrong'}</div>`;
+                    } else {
+                        responseMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+                        document.getElementById("studentForm").reset();
+                        document.getElementById("subjectsContainer").innerHTML = "";
+                    }
+                } catch (error) {
+                    console.error("Error adding student:", error);
+                    errorMessage.innerHTML = `<div class="alert alert-danger">An error occurred. Please try again.</div>`;
+                }
+            });
+            
+        </script>
+    </div>
+{% endblock %}

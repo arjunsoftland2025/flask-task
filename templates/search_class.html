@@ -1,0 +1,68 @@
+{% extends 'home-layout.html'%} {% block content %}
+    <div class="container">
+        <h1 class="text-center text-head">Search by Class</h1>
+        <div class="container-center">
+            <div class="element">
+                <form class="input-group" onsubmit="searchClass(event)">
+                    <input id="class-input" class="form-control mr-sm-2" type="text" placeholder="Enter Class Name (e.g., 10A)" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search Class</button>
+                </form>
+                <div id="result"></div>
+            </div>
+        </div>
+        <script>
+            async function searchClass(event) {
+                event.preventDefault(); // Prevent form refresh
+    
+                let classInput = document.getElementById("class-input").value.trim();
+                let resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = ""; // Clear previous results
+    
+                if (!classInput) {
+                    alert("Please enter a class name.");
+                    return;
+                }
+    
+                try {
+                    const response = await fetch(`/find_class?class_name=${encodeURIComponent(classInput)}`);
+                    const data = await response.json();
+    
+                    if (response.status !== 200) {
+                        resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+                        return;
+                    }
+    
+                    let studentsHTML = `<h3>Students in ${data.class_name}:</h3><ul>`;
+                    data.students.forEach(student => {
+                        studentsHTML += `<li>${student.name} (ID: ${student.id})</li>$`;
+                        let marksHTML = `<h3>Subjects & Marks:</h3><ul>`;
+                            for (let [subject, marks] of Object.entries(data.subjects)) {
+                                marksHTML += `
+                                                <li><strong>${subject}</strong>: 
+                                                    Sem 1 - ${marks.sem1}, 
+                                                    Sem 2 - ${marks.sem2}
+                                                </li>`;
+                            }
+                            marksHTML += `</ul>`;
+                    });
+                    studentsHTML += `</ul>`;
+    
+                    let subjectsHTML = `<h3>Subjects:</h3><ul>`;
+                    data.subjects.forEach(subject => {
+                        subjectsHTML += `<li>${subject}</li>`;
+                    });
+                    subjectsHTML += `</ul>`;
+    
+                    resultDiv.innerHTML = `
+                        <h2>Class: ${data.class_name}</h2>
+                        ${subjectsHTML}
+                        ${studentsHTML}
+                    `;
+                } catch (error) {
+                    console.error("Error fetching class data:", error);
+                    resultDiv.innerHTML = `<p style="color: red;">Error retrieving class details.</p>`;
+                }
+            }
+        </script>
+    </div>
+{% endblock %}

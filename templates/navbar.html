@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent p-4">
+    <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand" href="#">
+            <p class="display-6">Student Management</p>
+        </a>
+        <button class="navbar-toggler mb-4" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0 mt-3 ms-auto me-2">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{{ url_for('home') }}">
+                        <p class="text-custom">Home</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('add_students_page') }}">
+                        <p class="text-custom">Add Student</p>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{{ url_for('search_students') }}"><p class="text-custom">Search by Student</p></a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{{ url_for('search_class') }}"><p class="text-custom">Search by Class</p></a>
+                </li>
+                <li>
+                    <a class="nav-link" href="#"><p class="text-custom">Average</p></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
