@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center text-head" style="color: white;">Display</h1>
+        <div class="container-center">
+            <div class="element">
+                <ul class="container text-mid">
+                    <li>
+                        <a class="btn" href="{{ url_for('list_of_all_students') }}">Search by class</a>
+                    </li>
+                    <li>
+                        <a class="btn" href="{{ url_for('students_page') }}">Search by Student Nme</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

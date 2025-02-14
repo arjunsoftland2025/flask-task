@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
     <title>School</title>
 </head>
 <body>
@@ -13,7 +14,10 @@
             <div class="element">
                 <ul class="container text-mid">
                     <li>
-                        <a class="btn" href="{{ url_for('add_student_page') }}">Add Student</a>
+                        <a class="btn" href="{{ url_for('list_of_all_students') }}">Display</a>
+                    </li>
+                    <li>
+                        <a class="btn" href="{{ url_for('add_students_page') }}">Add Student</a>
                     </li>
                     <li>
                         <a class="btn" href="">Average</a>

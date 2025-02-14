@@ -17,77 +17,39 @@
         },
         {
             "id": 2,
-            "name": "Joel",
-            "class": "10A",
+            "name": "Arjun",
+            "class": "10B",
             "subjects": {
                 "Math": {
-                    "sem1": 0,
-                    "sem2": 0
+                    "sem1": 23,
+                    "sem2": 45
                 },
-                "Science": {
-                    "sem1": 0,
-                    "sem2": 0
+                "Physics": {
+                    "sem1": 55,
+                    "sem2": 67
                 },
-                "English": {
-                    "sem1": 0,
-                    "sem2": 0
+                "Chemistry": {
+                    "sem1": 56,
+                    "sem2": 78
                 }
             }
         },
         {
             "id": 3,
-            "name": "Arjun",
-            "class": "10B",
-            "subjects": {
-                "Math": {
-                    "sem1": 0,
-                    "sem2": 0
-                },
-                "Physics": {
-                    "sem1": 0,
-                    "sem2": 0
-                },
-                "Chemistry": {
-                    "sem1": 0,
-                    "sem2": 0
-                }
-            }
-        },
-        {
-            "id": 4,
-            "name": "Joeleere",
+            "name": "Joel",
             "class": "10A",
             "subjects": {
                 "Math": {
-                    "sem1": 0,
-                    "sem2": 0
+                    "sem1": 23,
+                    "sem2": 45
                 },
                 "Science": {
-                    "sem1": 0,
-                    "sem2": 0
+                    "sem1": 66,
+                    "sem2": 43
                 },
                 "English": {
-                    "sem1": 0,
-                    "sem2": 0
-                }
-            }
-        },
-        {
-            "id": 5,
-            "name": "wqeqeq",
-            "class": "10A",
-            "subjects": {
-                "Math": {
-                    "sem1": 0,
-                    "sem2": 0
-                },
-                "Science": {
-                    "sem1": 0,
-                    "sem2": 0
-                },
-                "English": {
-                    "sem1": 0,
-                    "sem2": 0
+                    "sem1": 56,
+                    "sem2": 67
                 }
             }
         }

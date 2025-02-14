@@ -18,6 +18,11 @@ def home():
 @app.route('/add_students_page')
 def add_students_page():
     return render_template("add_student.html")
+
+@app.route('/list_of_all_students')
+def list_of_all_students():
+    data = load_data()
+    return render_template('list_of_all_students.html', students=data['students'])
         
 @app.route("/get_classes", methods=["GET"])
 def get_classes():
@@ -47,8 +52,12 @@ def add_student():
     if not class_data:
         return jsonify({"error": "Class not found"}), 400
 
-    subjects = {subj_found: {"sem1": 0, "sem2": 0} for subj_found in class_data["subjects"]}
-
+    subjects = {}
+    for subject in class_data["subjects"]:
+        sem1_marks = req_data.get("subjects", {}).get(subject, {}).get("sem1", 0)
+        sem2_marks = req_data.get("subjects", {}).get(subject, {}).get("sem2", 0)
+        subjects[subject] = {"sem1": sem1_marks, "sem2": sem2_marks}
+    
     new_student = {
         "id": len(data["students"]) + 1,
         "name": student_name,

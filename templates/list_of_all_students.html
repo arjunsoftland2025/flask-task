@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+    <title>School</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center text-head" style="color: white">Display</h1>
+      <div class="container-center">
+        <div class="element container-center">
+          <h2 class="sub-head">Student List</h2>
+          
+          {% if students %}
+          <table class="text-mid container-center">
+              <tr class="row-head">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Subject</th>
+                <th>Sem 1</th>
+                <th>Sem 2</th>
+              </tr>
+              {% for student in students %}
+              {% for subject, marks in student.subjects.items() %}
+              <tr>
+                {% if loop.first %}
+                <td rowspan="{{ student.subjects|length }}" class="data">{{ student.id }}</td>
+                <td rowspan="{{ student.subjects|length }}" class="data">{{ student.name }}</td>
+                <td rowspan="{{ student.subjects|length }}" class="data">{{ student.class }}</td>
+                {% endif %}
+                <td class="data">{{ subject }}</td>
+                <td class="data">{{ marks.sem1 }}</td>
+                <td class="data">{{ marks.sem2 }}</td>
+              </tr>
+              {% endfor %}
+              {% endfor %}
+          </table>
+          {% else %}
+          <p>No students found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
