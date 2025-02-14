@@ -1,0 +1,113 @@
+{
+    "students": [
+        {
+            "id": 1,
+            "name": "John",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 85,
+                    "sem2": 90
+                },
+                "Science": {
+                    "sem1": 88,
+                    "sem2": 92
+                }
+            }
+        },
+        {
+            "id": 2,
+            "name": "Joel",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 0,
+                    "sem2": 0
+                },
+                "Science": {
+                    "sem1": 0,
+                    "sem2": 0
+                },
+                "English": {
+                    "sem1": 0,
+                    "sem2": 0
+                }
+            }
+        },
+        {
+            "id": 3,
+            "name": "Arjun",
+            "class": "10B",
+            "subjects": {
+                "Math": {
+                    "sem1": 0,
+                    "sem2": 0
+                },
+                "Physics": {
+                    "sem1": 0,
+                    "sem2": 0
+                },
+                "Chemistry": {
+                    "sem1": 0,
+                    "sem2": 0
+                }
+            }
+        },
+        {
+            "id": 4,
+            "name": "Joeleere",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 0,
+                    "sem2": 0
+                },
+                "Science": {
+                    "sem1": 0,
+                    "sem2": 0
+                },
+                "English": {
+                    "sem1": 0,
+                    "sem2": 0
+                }
+            }
+        },
+        {
+            "id": 5,
+            "name": "wqeqeq",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 0,
+                    "sem2": 0
+                },
+                "Science": {
+                    "sem1": 0,
+                    "sem2": 0
+                },
+                "English": {
+                    "sem1": 0,
+                    "sem2": 0
+                }
+            }
+        }
+    ],
+    "classes": [
+        {
+            "class_name": "10A",
+            "subjects": [
+                "Math",
+                "Science",
+                "English"
+            ]
+        },
+        {
+            "class_name": "10B",
+            "subjects": [
+                "Math",
+                "Physics",
+                "Chemistry"
+            ]
+        }
+    ]
+}
