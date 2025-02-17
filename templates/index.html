@@ -13,7 +13,7 @@
         <th>Sem 1</th>
         <th>Sem 2</th>
       </tr>
-      
+      {% for student in students %} {% for subject, marks in student.subjects.items() %}
       <tr>
         {% if loop.first %}
         <td rowspan="{{ student.subjects|length }}" class="data">
