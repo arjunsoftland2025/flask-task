@@ -1,68 +1,89 @@
-{% extends 'home-layout.html'%} {% block content %}
+{% extends 'home-layout.html'%} 
+{% block content %}
     <div class="container">
         <h1 class="text-center text-head">Search by Class</h1>
         <div class="container-center">
             <div class="element">
-                <form class="input-group" onsubmit="searchClass(event)">
-                    <input id="class-input" class="form-control mr-sm-2" type="text" placeholder="Enter Class Name (e.g., 10A)" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search Class</button>
+                <form class="form-group" onsubmit="searchClass(event)">
+                    <input id="class-input" class="form-control form-control-sm mr-sm-2" type="text" placeholder="Enter Class Name (e.g., 10A)" aria-label="Search">
+                    <div class="d-grid d-block mt-2">
+                        <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search Class</button>
+                    </div>
                 </form>
-                <div id="result"></div>
+                <div class="container bg-white mt-2" style="font-size: 20px;" id="result"></div>
+                {% include 'error_popup.html' with context %}
+                </div>
             </div>
         </div>
         <script>
             async function searchClass(event) {
-                event.preventDefault(); // Prevent form refresh
-    
+                event.preventDefault();
+            
                 let classInput = document.getElementById("class-input").value.trim();
-                let resultDiv = document.getElementById("result");
-                resultDiv.innerHTML = ""; // Clear previous results
-    
+                let resultOutput = document.getElementById("result");
+                let errorMessage = document.getElementById("errorMessage");
+            
+                resultOutput.innerHTML = "";
+                errorMessage.innerHTML = "";
+            
                 if (!classInput) {
-                    alert("Please enter a class name.");
+                    showError("Please enter a class name.");
                     return;
                 }
-    
+            
                 try {
                     const response = await fetch(`/find_class?class_name=${encodeURIComponent(classInput)}`);
                     const data = await response.json();
-    
-                    if (response.status !== 200) {
-                        resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+            
+                    if (!response.ok) {
+                        showError(data.error);
                         return;
                     }
-    
-                    let studentsHTML = `<h3>Students in ${data.class_name}:</h3><ul>`;
+            
+                    let studentsTable = `<h3>Students in ${data.class_name}:</h3><table class="table table-bordered">
+                                        <thead><tr><th>Name</th><th>ID</th><th>Subjects</th></tr></thead><tbody>`;
+            
                     data.students.forEach(student => {
-                        studentsHTML += `<li>${student.name} (ID: ${student.id})</li>$`;
-                        let marksHTML = `<h3>Subjects & Marks:</h3><ul>`;
-                            for (let [subject, marks] of Object.entries(data.subjects)) {
-                                marksHTML += `
-                                                <li><strong>${subject}</strong>: 
-                                                    Sem 1 - ${marks.sem1}, 
-                                                    Sem 2 - ${marks.sem2}
-                                                </li>`;
-                            }
-                            marksHTML += `</ul>`;
+                        let subjectsTable = `<table class="table table-sm">
+                                            <thead><tr><th>Subject</th><th>Sem 1</th><th>Sem 2</th></tr></thead><tbody>`;
+                        for (let [subject, marks] of Object.entries(student.subjects)) {
+                            subjectsTable += `<tr><td>${subject}</td><td>${marks.sem1 || "N/A"}</td><td>${marks.sem2 || "N/A"}</td></tr>`;
+                        }
+                        subjectsTable += `</tbody></table>`;
+            
+                        studentsTable += `<tr>
+                                            <td><strong>${student.name}</strong></td>
+                                            <td>${student.id}</td>
+                                            <td>${subjectsTable}</td>
+                                          </tr>`;
                     });
-                    studentsHTML += `</ul>`;
-    
-                    let subjectsHTML = `<h3>Subjects:</h3><ul>`;
+                    studentsTable += `</tbody></table>`;
+            
+                    let subjectsTable = `<h3>Subjects:</h3><table class="table table-bordered">
+                                        <thead><tr><th>Subject</th></tr></thead><tbody>`;
                     data.subjects.forEach(subject => {
-                        subjectsHTML += `<li>${subject}</li>`;
+                        subjectsTable += `<tr><td>${subject}</td></tr>`;
                     });
-                    subjectsHTML += `</ul>`;
-    
-                    resultDiv.innerHTML = `
+                    subjectsTable += `</tbody></table>`;
+            
+                    resultOutput.innerHTML = `
                         <h2>Class: ${data.class_name}</h2>
-                        ${subjectsHTML}
-                        ${studentsHTML}
+                        ${subjectsTable}
+                        ${studentsTable}
                     `;
                 } catch (error) {
                     console.error("Error fetching class data:", error);
-                    resultDiv.innerHTML = `<p style="color: red;">Error retrieving class details.</p>`;
+                    showError("Error retrieving class details. Please try again.");
                 }
             }
+            
+            function showError(message) {
+                let modalMessage = document.getElementById("errorMessage");
+                modalMessage.innerHTML = message;
+                let errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+                errorModal.show();
+            }
+            
         </script>
     </div>
 {% endblock %}

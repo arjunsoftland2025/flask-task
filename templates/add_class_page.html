@@ -1,0 +1,122 @@
+{% extends 'home-layout.html' %}
+{% block content %}
+    <div class="container col-6">
+        <h1 class="text-center text-head">Add Class</h1>
+        <div id="responseMessage" class="mt-3"></div>
+        {% include 'error_popup.html' with context %}
+        <form id="classForm">
+            <div class="mb-3">
+                <label for="className" class="form-label">Class Name</label>
+                <input type="text" class="form-control" id="className" required>
+            </div>
+            <div class="mb-3">
+                <label for="subjectsInput" class="form-label">Enter Subjects</label>
+                <div id="subjectsContainer">
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" id="subjectInput" placeholder="Enter subject" required>
+                        <button type="button" class="btn btn-outline-secondary" id="addSubjectBtn">Add Subject</button>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid d-block mt-2">
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Add Class</button>
+            </div>
+        </form>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            });
+
+            let subjectsList = [];
+
+            document.getElementById("addSubjectBtn").addEventListener("click", function () {
+                let subjectInput = document.getElementById("subjectInput");
+                let subjectValue = subjectInput.value.trim();
+
+                if (subjectValue && !subjectsList.includes(subjectValue)) {
+                    subjectsList.push(subjectValue);
+
+                    let div = document.createElement("div");
+                    div.classList.add("input-group", "mb-2");
+                    div.innerHTML = `
+                        <input type="text" class="form-control" value="${subjectValue}" disabled>
+                        <button type="button" class="btn btn-danger removeSubjectBtn">Remove</button>
+                    `;
+                    document.getElementById("subjectsContainer").appendChild(div);
+
+                    subjectInput.value = "";
+
+                    div.querySelector(".removeSubjectBtn").addEventListener("click", function () {
+                        div.remove();
+                        subjectsList = subjectsList.filter(subj => subj !== subjectValue);
+                    });
+                } else {
+                    if (subjectValue === "") {
+                        alert("Please enter a subject.");
+                    } else {
+                        alert("This subject has already been added.");
+                    }
+                }
+            });
+
+            document.getElementById("classForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                let className = document.getElementById("className").value.trim();
+                let errorMessage = document.getElementById("errorMessage");
+                let responseMessage = document.getElementById("responseMessage");
+
+                errorMessage.innerHTML = "";
+                responseMessage.innerHTML = "";
+
+                let errors = [];
+
+                if (!className) {
+                    errors.push("Class Name is required.");
+                }
+
+                if (subjectsList.length === 0) {
+                    errors.push("Please add at least one subject.");
+                }
+
+                if (errors.length > 0) {
+                    showError(errors.join("<br>"));
+                    return;
+                }
+
+                let classData = {
+                    class_name: className,
+                    subjects: subjectsList
+                };
+
+                try {
+                    let response = await fetch("/add_class", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(classData)
+                    });
+
+                    let result = await response.json();
+
+                    if (!response.ok) {
+                        showError(result.error || 'Something went wrong');
+                    } else {
+                        responseMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+                        document.getElementById("classForm").reset();
+                        document.getElementById("subjectsContainer").innerHTML = '';
+                        subjectsList = [];
+                    }
+                } catch (error) {
+                    console.error("Error adding class:", error);
+                    showError("An error occurred. Please try again.");
+                }
+            });
+
+            function showError(message) {
+                let modalMessage = document.getElementById("errorMessage");
+                modalMessage.innerHTML = message;
+                let errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+                errorModal.show();
+            }
+        </script>
+    </div>
+{% endblock %}

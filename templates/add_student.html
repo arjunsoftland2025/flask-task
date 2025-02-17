@@ -1,10 +1,8 @@
 {% extends 'home-layout.html'%} {% block content %}
     <div class="container col-6">
-        <h2 class="text-center">Add Student</h2>
-
+        <h1 class="text-center text-head">Add Student</h1>
         <div id="responseMessage" class="mt-3"></div>
-        <div id="errorMessage" class="mt-3"></div>
-        
+        {% include 'error_popup.html' with context %}
         <form id="studentForm">
             <div class="mb-3">
                 <label for="id" class="form-label">Student ID</label>
@@ -14,23 +12,17 @@
                 <label for="name" class="form-label">Student Name</label>
                 <input type="text" class="form-control" id="name" required>
             </div>
-    
             <div class="mb-3">
                 <label for="classSelect" class="form-label">Select Class</label>
                 <select class="form-control" id="classSelect" required>
                     <option value="">Choose a class</option>
                 </select>
             </div>
-    
             <div id="subjectsContainer" class="mb-3"></div>
-    
-            <button type="submit" class="btn btn-primary">Add Student</button>
+            <div class="d-grid d-block mt-2">
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Add Student</button>
+            </div>
         </form>
-    
-        <div id="responseMessage" class="mt-3"></div>
-    
-        <div id="errorMessage" class="mt-3"></div>
-    
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 fetchClasses();
@@ -92,10 +84,9 @@
                 let errorMessage = document.getElementById("errorMessage");
                 let responseMessage = document.getElementById("responseMessage");
                 
-                errorMessage.innerHTML = ""; // Clear old errors
-                responseMessage.innerHTML = ""; // Clear old success messages
+                errorMessage.innerHTML = "";
+                responseMessage.innerHTML = "";
             
-                // Validation
                 let errors = [];
                 if (!studentId) {
                     errors.push("Student ID is required.");
@@ -124,9 +115,8 @@
                     subjects[subject][sem] = value;
                 });
             
-                // If there are validation errors, display them and stop form submission
                 if (errors.length > 0) {
-                    errorMessage.innerHTML = `<div class="alert alert-danger">${errors.join("<br>")}</div>`;
+                    showError(errors.join("<br>"))
                     return;
                 }
             
@@ -147,7 +137,7 @@
                     let result = await response.json();
             
                     if (!response.ok) {
-                        errorMessage.innerHTML = `<div class="alert alert-danger">${result.error || 'Something went wrong'}</div>`;
+                        showError(result.error || 'Something went wrong');
                     } else {
                         responseMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
                         document.getElementById("studentForm").reset();
@@ -155,9 +145,16 @@
                     }
                 } catch (error) {
                     console.error("Error adding student:", error);
-                    errorMessage.innerHTML = `<div class="alert alert-danger">An error occurred. Please try again.</div>`;
+                    showError("An error occurred. Please try again.");
                 }
             });
+
+            function showError(message) {
+                let modalMessage = document.getElementById("errorMessage");
+                modalMessage.innerHTML = message;
+                let errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+                errorModal.show();
+            }
             
         </script>
     </div>

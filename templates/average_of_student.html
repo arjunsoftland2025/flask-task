@@ -1,0 +1,64 @@
+{% extends 'home-layout.html'%} {% block content %}
+<div class="container">
+    <h1 class="text-center text-head">Calculate Student's Subject Average</h1>
+    <div class="container-center">
+        <div class="element">
+            <form class="form-group" onsubmit="calculateAverage(event)">
+                <input id="student-name" class="form-control mb-2" type="text" placeholder="Enter Student Name" required>
+                <input id="subject-name" class="form-control" type="text" placeholder="Enter Subject Name" required>
+                <div class="d-grid d-block mt-2">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Calculate Average</button>
+                </div>
+            </form>
+            <div class="container bg-white mt-2" style="font-size: 20px;" id="average-result"></div>
+            {% include 'error_popup.html' with context %}
+        </div>
+    </div>
+
+    <script>
+        async function calculateAverage(event) {
+            event.preventDefault();
+
+            let studentName = document.getElementById("student-name").value.trim();
+            let subjectName = document.getElementById("subject-name").value.trim();
+            let resultDiv = document.getElementById("average-result");
+            let errorMessage = document.getElementById("errorMessage");
+            resultDiv.innerHTML = "";
+            errorMessage.innerHTML = "";
+
+            if (!studentName || !subjectName) {
+                showErro("Please enter both student name and subject name.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/calculate_average?name=${encodeURIComponent(studentName)}&subject=${encodeURIComponent(subjectName)}`);
+                const data = await response.json();
+
+                if (response.status !== 200) {
+                    showError(data.error);
+                    return;
+                }
+
+                resultDiv.innerHTML = `
+                    <h2 class="pt-3">Result for ${data.student_name}</h2>
+                    <p><strong>Subject:</strong> ${data.subject}</p>
+                    <p><strong>Semester 1 Marks:</strong> ${data.sem1}</p>
+                    <p><strong>Semester 2 Marks:</strong> ${data.sem2}</p>
+                    <p><strong>Average Marks:</strong> ${data.average}</p>
+                `;
+            } catch (error) {
+                console.error("Error calculating average:", error);
+                showError("Error retrieving class details. Please try again.");
+            }
+        }
+
+        function showError(message) {
+            let modalMessage = document.getElementById("errorMessage");
+            modalMessage.innerHTML = message;
+            let errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+            errorModal.show();
+        }
+    </script>
+</div>
+{% endblock %}
