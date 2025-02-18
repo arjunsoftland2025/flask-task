@@ -1,9 +1,9 @@
 {% extends 'home-layout.html'%} {% block content %}
 <div class="container">
-    <h1 class="text-center text-head">Calculate Total Average of a Student</h1>
+    <h1 class="text-center text-head">Calculate Total Sem Average of a Student</h1>
     <div class="container-center">
         <div class="element">
-            <form class="form-group" onsubmit="calculateTotalAverage(event)">
+            <form class="form-group" onsubmit="calculateSemAverage(event)">
                 <input id="student-name-total" class="form-control mr-sm-2" type="text" placeholder="Enter Student Name" required>
                 <div class="d-grid gap-2 d-block mt-2">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Calculate Total Average</button>
@@ -14,7 +14,7 @@
     </div>
 
     <script>
-        async function calculateTotalAverage(event) {
+        async function calculateSemAverage(event) {
             event.preventDefault();
 
             let studentName = document.getElementById("student-name-total").value.trim();
@@ -27,8 +27,9 @@
             }
 
             try {
-                const response = await fetch(`/calculate_total_average?name=${encodeURIComponent(studentName)}`);
+                const response = await fetch(`/calculate_sem_average?name=${encodeURIComponent(studentName)}`);
                 const data = await response.json();
+                console.log(data);
 
                 if (response.status !== 200) {
                     resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
@@ -38,10 +39,10 @@
                 resultDiv.innerHTML = `
                     <h2 class="pt-3">Total Average Marks</h2>
                     <p><strong>Student:</strong> ${data.student_name}</p>
-                    <p><strong>Overall Average Marks:</strong> ${data.total_average}</p>
+                    <p><strong>Sem1 Average Marks:</strong> ${data.sem1_average}</p>
+                    <p><strong>Sem2 Average Marks:</strong> ${data.sem2_average}</p>
                 `;
             } catch (error) {
-                console.error("Error calculating total average:", error);
                 resultDiv.innerHTML = `<p style="color: red;">Error calculating total average marks.</p>`;
             }
         }

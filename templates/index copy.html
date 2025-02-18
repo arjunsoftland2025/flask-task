@@ -2,17 +2,16 @@
 {% block content %}
 <h1 class="display-4 text-center text-white mb-3">Welcome</h1>
 <div class="container bg-white rounded-1 shadow-lg">
-    {% include 'error_popup.html' with context %}
     <div class="container p-3 mb-4">
         <h2 class="display-6 text-center p-3">Student List</h2>
 
         <form class="input-group mb-3">
-            <select id="filter-by" class="form-select bg-success text-white" style="max-width: 200px">
+            <select id="filter-by" class="form-select" style="max-width: 200px">
                 <option value="name">Filter by Student Name</option>
                 <option value="class">Filter by Class</option>
             </select>
-            <input type="text" id="search-input" maxlength="50" class="form-control" placeholder="Search..." />
-            <button id="filter-btn" class="btn btn-success" type="button">Search</button>
+            <input type="text" id="search-input" class="form-control" placeholder="Search..." />
+            <button id="filter-btn" class="btn btn-success" type="button">Filter</button>
         </form>
 
         <table class="table table-bordered">
@@ -67,73 +66,29 @@
 </div>
 
 <script>
-    const nameRegex = /^[A-Za-z]{3,}(?: [A-Za-z]{1,})*$/;
-    const classRegex = /^(1[0-2]|[1-9])[A-Z]$/;
-
     document.getElementById("filter-btn").addEventListener("click", function () {
         const filterBy = document.getElementById("filter-by").value;
         const rows = document.querySelectorAll(".student-row");
-    
-        // Hide all rows initially
+
         rows.forEach((row) => {
             row.style.display = "none";
         });
-    
+
         const searchInput = document
             .getElementById("search-input")
-            .value.trim().toLowerCase();  // Trim to avoid issues with extra spaces
-        
-        let nameError = false;  // Initialize nameError here
-        let classError = false;  // Initialize classError here
-    
+            .value.toLowerCase();
+
         rows.forEach((row) => {
             const studentName = row.getAttribute("data-name");
             const studentClass = row.getAttribute("data-class");
-    
-            if (filterBy === "name"){
-                if(!nameRegex.test(searchInput)) {
-                    nameError = true;  // Set nameError to true if invalid
-                }
-            }
-    
-            if (filterBy === "class"){
-                if(!classRegex.test(searchInput)) {
-                    classError = true;  // Set classError to true if invalid
-                }
-            }
-    
-            // Filter by name or class based on user selection
-            if (filterBy === "name" && studentName.toLowerCase().includes(searchInput)) {
+
+            if (filterBy === "name" && studentName.includes(searchInput)) {
                 row.style.display = "";
-            } else if (filterBy === "class" && studentClass.toLowerCase().includes(searchInput)) {
+            } else if (filterBy === "class" && studentClass.includes(searchInput)) {
                 row.style.display = "";
             }
         });
-    
-        // Handle errors if any
-        if (nameError === true) {
-            showError("Please enter a valid name.");
-            setTimeout(function() {
-                location.reload();
-            }, 1000);
-        }
-    
-        if (classError === true) {
-            showError("Please enter a valid class.");
-            setTimeout(function() {
-                location.reload();
-            }, 1000);
-        }
-    
-        // Function to display errors
-        function showError(message) {
-            let modalMessage = document.getElementById("errorMessage");
-            modalMessage.innerHTML = message;
-            let errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
-            errorModal.show();
-        }
     });
-
 
     let sortClassOrder = 'asc';
     let sortNameOrder = 'asc';

@@ -71,6 +71,82 @@
                     "sem2": 21
                 }
             }
+        },
+        {
+            "id": 5,
+            "name": "Unni",
+            "class": "10C",
+            "subjects": {
+                "mal": {
+                    "sem1": 21,
+                    "sem2": 21
+                },
+                "tamil": {
+                    "sem1": 33,
+                    "sem2": 33
+                },
+                "english": {
+                    "sem1": 55,
+                    "sem2": 67
+                }
+            }
+        },
+        {
+            "id": 6,
+            "name": "Arun Radhakrishnan",
+            "class": "10A",
+            "subjects": {
+                "Math": {
+                    "sem1": 34,
+                    "sem2": 54
+                },
+                "Science": {
+                    "sem1": 44,
+                    "sem2": 44
+                },
+                "English": {
+                    "sem1": 65,
+                    "sem2": 67
+                }
+            }
+        },
+        {
+            "id": 7,
+            "name": "stephen",
+            "class": "1A",
+            "subjects": {
+                "eng": {
+                    "sem1": 23,
+                    "sem2": 32
+                },
+                "malayalm": {
+                    "sem1": 23,
+                    "sem2": 44
+                },
+                "tamil": {
+                    "sem1": 33,
+                    "sem2": 22
+                }
+            }
+        },
+        {
+            "id": 8,
+            "name": "Ajith",
+            "class": "2C",
+            "subjects": {
+                "Eng": {
+                    "sem1": 22,
+                    "sem2": 33
+                },
+                "Maths": {
+                    "sem1": 44,
+                    "sem2": 54
+                },
+                "Malayalam": {
+                    "sem1": 34,
+                    "sem2": 65
+                }
+            }
         }
     ],
     "classes": [
@@ -99,16 +175,19 @@
             ]
         },
         {
-            "class_name": "10f",
+            "class_name": "2C",
             "subjects": [
-                "tamil"
+                "Eng",
+                "Maths",
+                "Malayalam"
             ]
         },
         {
-            "class_name": "10p",
+            "class_name": "1A",
             "subjects": [
-                "tamil",
-                "mal"
+                "eng",
+                "malayalm",
+                "tamil"
             ]
         }
     ]

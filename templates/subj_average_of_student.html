@@ -3,7 +3,7 @@
     <h1 class="text-center text-head">Calculate Student's Subject Average</h1>
     <div class="container-center">
         <div class="element">
-            <form class="form-group" onsubmit="calculateAverage(event)">
+            <form class="form-group" onsubmit="calculateSubjAverage(event)">
                 <input id="student-name" class="form-control mb-2" type="text" placeholder="Enter Student Name" required>
                 <input id="subject-name" class="form-control" type="text" placeholder="Enter Subject Name" required>
                 <div class="d-grid d-block mt-2">
@@ -16,7 +16,7 @@
     </div>
 
     <script>
-        async function calculateAverage(event) {
+        async function calculateSubjAverage(event) {
             event.preventDefault();
 
             let studentName = document.getElementById("student-name").value.trim();
@@ -32,7 +32,7 @@
             }
 
             try {
-                const response = await fetch(`/calculate_average?name=${encodeURIComponent(studentName)}&subject=${encodeURIComponent(subjectName)}`);
+                const response = await fetch(`/calculate_subj_average?name=${encodeURIComponent(studentName)}&subject=${encodeURIComponent(subjectName)}`);
                 const data = await response.json();
 
                 if (response.status !== 200) {

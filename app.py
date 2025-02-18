@@ -49,6 +49,23 @@ def save_data(data):
 @app.route('/')
 def home():
     data = load_data()
+    students = data['students']
+    
+    for student in students:
+        total_sem1 = 0
+        total_sem2 = 0
+        subject_count = len(student['subjects'])
+
+        for subject, marks in student['subjects'].items():
+            total_sem1 += marks['sem1']
+            total_sem2 += marks['sem2']
+
+        student['sem1_avg'] = round(total_sem1 / subject_count, 2) if subject_count > 0 else 0
+        student['sem2_avg'] = round(total_sem2 / subject_count, 2) if subject_count > 0 else 0
+        
+        for subject, marks in student['subjects'].items():
+            marks['subj_avg'] = round((marks['sem1'] + marks['sem2']) / 2, 2)
+            
     return render_template('index.html', students=data['students'])
         
 @app.route('/add_students_page')
@@ -91,7 +108,7 @@ def add_class():
     
     class_data = next((cls for cls in data["classes"] if cls["class_name"] == class_name), None)
     if class_data:
-        errors.append("Class not found")
+        errors.append("Duplicate Class found")
     
     if not class_check(class_name):
         errors.append("Invalid class format. Example: '10A'.")
@@ -105,6 +122,21 @@ def add_class():
     save_data(data)
 
     return jsonify({'message': 'Class added successfully!', "classes": new_class})
+
+
+@app.route('/check_student_id/<student_id>', methods=['GET'])
+def check_student_id(student_id):
+    data = load_data()
+    errors = []
+    if any(student["id"] == student_id for student in data["students"]):
+        errors.append("A student with this ID already exists.")
+        
+    if errors:
+        return jsonify({"error": "<br>".join(errors)}), 400
+    else:
+        return None
+        
+
 
 @app.route("/add_student", methods=["POST"])
 def add_student():
@@ -215,12 +247,16 @@ def find_class_route():
         "students": students_with_marks
     })
 
-@app.route("/average_of_student")
-def average_of_student():
-    return render_template("average_of_student.html")
+@app.route("/subj_average_of_student")
+def subj_average_of_student():
+    return render_template("subj_average_of_student.html")
 
-@app.route('/calculate_average', methods=['GET'])
-def calculate_average():
+@app.route("/sem_average_of_students")
+def sem_average_of_students():
+    return render_template("sem_average_of_students.html")
+
+@app.route('/calculate_subj_average', methods=['GET'])
+def calculate_subj_average():
     student_name = request.args.get("name", "").strip()
     subject_name = request.args.get("subject", "").strip()
     data = load_data()
@@ -245,37 +281,34 @@ def calculate_average():
         "average": round(average, 2)
     })
 
-@app.route("/total_average_of_students")
-def total_average_of_students():
-    return render_template("total_average_of_students.html")
-
-@app.route('/calculate_total_average', methods=['GET'])
-def calculate_total_average():
+@app.route('/calculate_sem_average', methods=['GET'])
+def calculate_sem_average():
     student_name = request.args.get("name", "").strip()
     data = load_data()
 
-    student = next((student for student in data["students"] if student["name"].lower() == student_name.lower()), None)
-    if not student:
+    student_sem = next((student for student in data["students"] if student["name"].lower() == student_name.lower()), None)
+    if not student_sem:
         return jsonify({"error": "Student not found"}), 404
+    
+ 
+    total_sem1 = 0
+    total_sem2 = 0
+    subject_count = len(student_sem['subjects'])
 
-    total_marks = 0
-    subject_count = 0
+    for subject, marks in student_sem['subjects'].items():
+        total_sem1 += marks['sem1']
+        total_sem2 += marks['sem2']
 
-    for subject, marks in student["subjects"].items():
-        sem1 = marks.get("sem1", 0)
-        sem2 = marks.get("sem2", 0)
-        total_marks += sem1 + sem2
-        subject_count += 2
-
-    if subject_count == 0:
-        return jsonify({"error": "No subjects found for the student"}), 404
-
-    total_average = total_marks / subject_count
+    student_sem['sem1_avg'] = round(total_sem1 / subject_count, 2) if subject_count > 0 else 0
+    student_sem['sem2_avg'] = round(total_sem2 / subject_count, 2) if subject_count > 0 else 0
+        
 
     return jsonify({
-        "student_name": student["name"],
-        "total_average": round(total_average, 2)
+        "student_name": student_sem["name"],
+        "sem1_average": student_sem['sem1_avg'],
+        "sem2_average": student_sem['sem2_avg']
     })
+
 
 
 if __name__ == "__main__":

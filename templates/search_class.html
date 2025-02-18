@@ -5,7 +5,7 @@
         <div class="container-center">
             <div class="element">
                 <form class="form-group" onsubmit="searchClass(event)">
-                    <input id="class-input" class="form-control form-control-sm mr-sm-2" type="text" placeholder="Enter Class Name (e.g., 10A)" aria-label="Search">
+                    <input id="class-input" class="form-control form-control-sm mr-sm-2" type="text" maxlength="3" placeholder="Enter Class Name (e.g., 10A)" aria-label="Search">
                     <div class="d-grid d-block mt-2">
                         <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search Class</button>
                     </div>
@@ -52,7 +52,10 @@
                         subjectsTable += `</tbody></table>`;
             
                         studentsTable += `<tr>
-                                            <td><strong>${student.name}</strong></td>
+                                            <td style="width: 40%;"><div class="d-inline-flex justify-content-center align-items-center text-center" 
+                                                style="min-height: 100px; width: 100%; word-break: break-all;">
+                                                ${student.name}
+                                            </div></td>
                                             <td>${student.id}</td>
                                             <td>${subjectsTable}</td>
                                           </tr>`;

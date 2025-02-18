@@ -7,13 +7,13 @@
         <form id="classForm">
             <div class="mb-3">
                 <label for="className" class="form-label">Class Name</label>
-                <input type="text" class="form-control" id="className" required>
+                <input type="text" class="form-control" maxlength="3" id="className" required>
             </div>
             <div class="mb-3">
                 <label for="subjectsInput" class="form-label">Enter Subjects</label>
                 <div id="subjectsContainer">
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="subjectInput" placeholder="Enter subject" required>
+                        <input type="text" class="form-control" id="subjectInput" minlength="3" maxlength="15" placeholder="Enter subject">
                         <button type="button" class="btn btn-outline-secondary" id="addSubjectBtn">Add Subject</button>
                     </div>
                 </div>
